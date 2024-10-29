@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import './calendario.css';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Importa Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css';
+import AggiungiEvento from './AggiungiEvento';
 
 const Calendario = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth());
   const [days, setDays] = useState([]);
-  const [showModal, setShowModal] = useState(false); // Stato per mostrare/nascondere il modal
+  const [showModal, setShowModal] = useState(false); 
   const [eventData, setEventData] = useState({
-    day: '',
-    month: '',
-    year: '',
+    date: '',
     title: '',
-    time: '',
+    starttime: '',
+    endtime: '',
     description: ''
   });
 
@@ -66,16 +66,13 @@ const Calendario = () => {
         <button className="btn btn-outline-primary" onClick={() => changeMonth('prev')}>Mese precedente</button>
         <h2>{monthNames[month]} {year}</h2>
 
+        <button className="btn btn-outline-primary" onClick={() => changeMonth('next')}>Mese successivo</button>
         <button 
           className="btn btn-success add-event-btn" 
           onClick={() => setShowModal(true)}
         >
           Aggiungi evento
         </button>
-
-        <button className="btn btn-outline-primary" onClick={() => changeMonth('next')}>Mese successivo</button>
-
-        
       </div>
 
       <div className="calendar-grid">
@@ -90,88 +87,13 @@ const Calendario = () => {
         ))}
       </div>
 
-      {showModal && (
-        <div className="modal show" style={{ display: 'block' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Inserisci un nuovo evento</h5>
-                <button type="button" className="close" onClick={() => setShowModal(false)}>
-                  &times;
-                </button>
-              </div>
-              <div className="modal-body">
-                <form onSubmit={submitEvent}>
-                  <div className="form-group">
-                    <label>Giorno</label>
-                    <input 
-                      type="number" 
-                      className="form-control" 
-                      name="day" 
-                      value={eventData.day} 
-                      onChange={handleInputChange} 
-                      required 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Mese</label>
-                    <input 
-                      type="number" 
-                      className="form-control" 
-                      name="month" 
-                      value={eventData.month} 
-                      onChange={handleInputChange} 
-                      required 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Anno</label>
-                    <input 
-                      type="number" 
-                      className="form-control" 
-                      name="year" 
-                      value={eventData.year} 
-                      onChange={handleInputChange} 
-                      required 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Titolo dell'evento</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      name="title" 
-                      value={eventData.title} 
-                      onChange={handleInputChange} 
-                      required 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Ora</label>
-                    <input 
-                      type="time" 
-                      className="form-control" 
-                      name="time" 
-                      value={eventData.time} 
-                      onChange={handleInputChange} 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Descrizione</label>
-                    <textarea 
-                      className="form-control" 
-                      name="description" 
-                      value={eventData.description} 
-                      onChange={handleInputChange} 
-                    />
-                  </div>
-                  <button type="submit" className="btn btn-primary">Salva evento</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <AggiungiEvento 
+        show={showModal} 
+        onClose={() => setShowModal(false)} 
+        onSubmit={submitEvent} 
+        eventData={eventData} 
+        handleInputChange={handleInputChange} 
+      />
     </div>
   );
 };
