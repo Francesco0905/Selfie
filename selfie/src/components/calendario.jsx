@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './calendario.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AggiungiEvento from './AggiungiEvento';
+import Note from './note';
 
 const Calendario = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth());
   const [days, setDays] = useState([]);
   const [showModal, setShowModal] = useState(false); 
+  const [showTextModal, setShowTextModal] = useState(false);
   const [eventData, setEventData] = useState({
     date: '',
     title: '',
@@ -15,6 +17,14 @@ const Calendario = () => {
     endtime: '',
     description: ''
   });
+
+  const [textData, setTextData] = useState({ text: '' });
+
+  /* dichiaro il giorno corrente */
+  const isToday = (day) => {
+    const today = new Date();
+    return today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
+  };
 
   const monthNames = [
     'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
@@ -57,22 +67,34 @@ const Calendario = () => {
   const submitEvent = (e) => {
     e.preventDefault();
     console.log('Dati evento:', eventData);
-    setShowModal(false); // Chiudi il modal dopo l'invio
+    setShowModal(false); // chiude il modal dopo l'invio
+  };
+
+  const handleTextInputChange = (e) => {
+    const { name, value } = e.target;
+    setTextData({ ...textData, [name]: value });
+  };
+  
+  const submitText = (e) => {
+    e.preventDefault();
+    console.log('Dati testo:', textData);
+    setShowTextModal(false); // chiude il pop-up dopo l'invio
   };
 
   return (
     <div className="calendar-container">
       <div className="calendar-header">
-        <button className="btn btn-outline-primary" onClick={() => changeMonth('prev')}>Mese precedente</button>
+
+        <button className="btn btn-outline-primary" onClick={() => changeMonth('prev')}> {'<'} </button>
+
         <h2>{monthNames[month]} {year}</h2>
 
-        <button className="btn btn-outline-primary" onClick={() => changeMonth('next')}>Mese successivo</button>
-        <button 
-          className="btn btn-success add-event-btn" 
-          onClick={() => setShowModal(true)}
-        >
-          Aggiungi evento
-        </button>
+        <button className="btn btn-outline-primary" onClick={() => changeMonth('next')}>{'>'}</button>
+
+        <button className="btn btn-warning add-text-btn" onClick={() => setShowTextModal(true)}> Aggiungi testo </button>
+
+        <button className="btn btn-primary add-event-btn" onClick={() => setShowModal(true)}> 
+        Aggiungi evento </button>
       </div>
 
       <div className="calendar-grid">
@@ -80,12 +102,21 @@ const Calendario = () => {
           <div className="calendar-day-name" key={day}>{day}</div>
         ))}
 
+        {/* cambio il className per identificare il div contenente la data odierna  */}
         {days.map((day, index) => (
-          <div key={index} className={`calendar-day ${day ? '' : 'empty'}`}>
+          <div key={index} className={`calendar-day ${day ? (isToday(day) ? 'calendar-day-today' : '') : 'empty'}`}> 
             {day}
           </div>
         ))}
       </div>
+      
+      <Note 
+        show={showTextModal} 
+        onClose={() => setShowTextModal(false)} 
+        onSubmit={submitText} 
+        textData={textData} 
+        handleInputChange={handleTextInputChange} 
+      />
 
       <AggiungiEvento 
         show={showModal} 
