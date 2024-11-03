@@ -85,16 +85,22 @@ const Calendario = () => {
     <div className="calendar-container">
       <div className="calendar-header">
 
-        <button className="btn btn-outline-primary" onClick={() => changeMonth('prev')}> {'<'} </button>
+        <button className="btn btn-warning add-text-btn" onClick={() => setShowTextModal(true)}> 
+        <i className="bi bi-card-text"></i>
+        </button>
+
+        <button className="btn btn-outline-primary" onClick={() => changeMonth('prev')}>
+        <i class="bi bi-arrow-left"></i>
+        </button>
 
         <h2>{monthNames[month]} {year}</h2>
 
-        <button className="btn btn-outline-primary" onClick={() => changeMonth('next')}>{'>'}</button>
-
-        <button className="btn btn-warning add-text-btn" onClick={() => setShowTextModal(true)}> Aggiungi testo </button>
+        <button className="btn btn-outline-primary" onClick={() => changeMonth('next')}>
+        <i class="bi bi-arrow-right"></i>
+        </button>
 
         <button className="btn btn-primary add-event-btn" onClick={() => setShowModal(true)}> 
-        Aggiungi evento </button>
+        <i class="bi bi-calendar-event"></i>        </button>
       </div>
 
       <div className="calendar-grid">
